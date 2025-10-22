@@ -62,10 +62,4 @@ public class ProductServicePerformanceTest {
 		runnable.run();
 		return Duration.between(start, Instant.now()).toMillis();
 	}
-
-	// 존재하지 않는 검색어를 사용할 경우 (ex. 컴퓨터)
-	// [JPA With No Index Average] : 49 ms
-	// [DSL With No Index Average] : 54 ms
-	// [JPA With Index Average] : 0 ms
-	// [DSL With Index Average] : 1 ms
 }

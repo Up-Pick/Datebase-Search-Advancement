@@ -1,0 +1,71 @@
+package uppick.dsadvancement;
+
+import java.time.Duration;
+import java.time.Instant;
+import java.util.List;
+
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+
+import lombok.extern.slf4j.Slf4j;
+import uppick.dsadvancement.fullTextSearch.Dto.response.ProductSearchDto;
+import uppick.dsadvancement.fullTextSearch.entity.Product;
+import uppick.dsadvancement.fullTextSearch.service.ProductService;
+
+@Slf4j
+@SpringBootTest
+@ActiveProfiles("test")
+public class ProductServicePerformanceTest {
+
+	@Autowired
+	private ProductService productService;
+
+	private static final String KEYWORD = "상품90";
+
+	@Test
+	void compareAveragePerformance() {
+		int iterations = 10;
+
+		long jpaWithFullText = 0;
+		long dslWithFullText = 0;
+
+		long jpaWithLike = 0;
+		long dslWithLike = 0;
+
+		for (int i = 0; i < iterations; i++) {
+			jpaWithFullText += measure(() -> productService.findProductsWithJpaByFullText(KEYWORD));
+			dslWithFullText += measure(() -> productService.findProductsWithDslByLike(KEYWORD));
+
+			jpaWithLike += measure(() -> productService.findProductsWithJpaByLike(KEYWORD));
+			dslWithLike += measure(() -> productService.findProductsWithDslByLike(KEYWORD));
+		}
+
+		log.info("[JPA With No Index Average] : {} ms", jpaWithFullText / iterations);
+		log.info("[DSL With No Index Average] : {} ms", dslWithFullText / iterations);
+
+		log.info("[JPA With Index Average] : {} ms", jpaWithLike / iterations);
+		log.info("[DSL With Index Average] : {} ms", dslWithLike / iterations);
+
+		List<Product> p1 = productService.findProductsWithJpaByLike(KEYWORD);
+		List<Product> p2 = productService.findProductsWithJpaByFullText(KEYWORD);
+
+		List<ProductSearchDto> p3 = productService.findProductsWithDslByLike(KEYWORD);
+		List<ProductSearchDto> p4 = productService.findProductsWithDslByFullText(KEYWORD);
+
+		log.info("Test done");
+	}
+
+	private long measure(Runnable runnable) {
+		Instant start = Instant.now();
+		runnable.run();
+		return Duration.between(start, Instant.now()).toMillis();
+	}
+
+	// 존재하지 않는 검색어를 사용할 경우 (ex. 컴퓨터)
+	// [JPA With No Index Average] : 49 ms
+	// [DSL With No Index Average] : 54 ms
+	// [JPA With Index Average] : 0 ms
+	// [DSL With Index Average] : 1 ms
+}

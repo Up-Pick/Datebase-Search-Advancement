@@ -18,5 +18,6 @@ public class ProductSearchDto {
 		this.id = id;
 		this.productName = productName;
 		this.content = content;
+		this.score = null; // 기본 null
 	}
 }

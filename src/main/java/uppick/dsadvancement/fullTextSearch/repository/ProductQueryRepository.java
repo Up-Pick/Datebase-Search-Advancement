@@ -12,6 +12,7 @@ import com.querydsl.sql.SQLQueryFactory;
 
 import lombok.RequiredArgsConstructor;
 import uppick.dsadvancement.fullTextSearch.Dto.response.ProductSearchDto;
+
 import static uppick.dsadvancement.fullTextSearch.entity.QProduct.product;
 
 @Repository
@@ -37,8 +38,9 @@ public class ProductQueryRepository {
 					product.content,
 					relevanceScore))
 			.from(product)
-			.where(relevanceScore.gt(0.5f))
+			.where(relevanceScore.gt(0.0f))
 			.orderBy(relevanceScore.desc())
+			.limit(1_000)
 			.fetch();
 	}
 
@@ -52,6 +54,7 @@ public class ProductQueryRepository {
 					product.content))
 			.from(product)
 			.where(product.productName.like("%" + keyword + "%"))
+			.limit(1_000)
 			.fetch();
 	}
 }

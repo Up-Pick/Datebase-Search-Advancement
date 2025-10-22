@@ -32,7 +32,7 @@ public class DummyDataInitializer {
 
 		IntStream.range(0, 1_000_000).forEach(i -> {
 			Product product = Product.builder()
-				.productName("상품_"+(i % 10000)+"_"+random.nextInt(100))
+				.productName("상품 "+(i % 10000)+"번 - "+random.nextInt(100))
 				.content("테스트용 내용, 키워드 : " + (i%500))
 				.build();
 			productRepository.save(product);

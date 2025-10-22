@@ -22,11 +22,11 @@ public class ProductServicePerformanceTest {
 	@Autowired
 	private ProductService productService;
 
-	private static final String KEYWORD = "상품90";
+	private static final String KEYWORD = "123번이에요";
 
 	@Test
 	void compareAveragePerformance() {
-		int iterations = 10;
+		int iterations = 5;
 
 		long jpaWithFullText = 0;
 		long dslWithFullText = 0;
@@ -36,23 +36,23 @@ public class ProductServicePerformanceTest {
 
 		for (int i = 0; i < iterations; i++) {
 			jpaWithFullText += measure(() -> productService.findProductsWithJpaByFullText(KEYWORD));
-			dslWithFullText += measure(() -> productService.findProductsWithDslByLike(KEYWORD));
+			dslWithFullText += measure(() -> productService.findProductsWithDslByFullText(KEYWORD));
 
 			jpaWithLike += measure(() -> productService.findProductsWithJpaByLike(KEYWORD));
 			dslWithLike += measure(() -> productService.findProductsWithDslByLike(KEYWORD));
 		}
 
-		log.info("[JPA With No Index Average] : {} ms", jpaWithFullText / iterations);
-		log.info("[DSL With No Index Average] : {} ms", dslWithFullText / iterations);
+		log.info("[JPA With Index Average] : {} ms", jpaWithFullText / iterations);
+		log.info("[DSL With Index Average] : {} ms", dslWithFullText / iterations);
 
-		log.info("[JPA With Index Average] : {} ms", jpaWithLike / iterations);
-		log.info("[DSL With Index Average] : {} ms", dslWithLike / iterations);
+		log.info("[JPA With No Index Average] : {} ms", jpaWithLike / iterations);
+		log.info("[DSL With No Index Average] : {} ms", dslWithLike / iterations);
 
-		List<Product> p1 = productService.findProductsWithJpaByLike(KEYWORD);
-		List<Product> p2 = productService.findProductsWithJpaByFullText(KEYWORD);
+		List<Product> p1 = productService.findProductsWithJpaByFullText(KEYWORD);
+		List<ProductSearchDto> p2 = productService.findProductsWithDslByFullText(KEYWORD);
 
-		List<ProductSearchDto> p3 = productService.findProductsWithDslByLike(KEYWORD);
-		List<ProductSearchDto> p4 = productService.findProductsWithDslByFullText(KEYWORD);
+		List<Product> p3 = productService.findProductsWithJpaByLike(KEYWORD);
+		List<ProductSearchDto> p4 = productService.findProductsWithDslByLike(KEYWORD);
 
 		log.info("Test done");
 	}

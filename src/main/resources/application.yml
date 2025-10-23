@@ -11,3 +11,7 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     hibernate:
       ddl-auto: none
+  elasticsearch:
+    username: elastic
+    password: G0MfzjGI2Glf*61628Yz
+    uris: http://localhost:9200

@@ -30,7 +30,7 @@ public class ProductServicePerformanceTest {
 
 	@Test
 	void compareAveragePerformance() {
-		int iterations = 5;
+		int iterations = 10;
 
 		long jpaWithFullText = 0;
 		long dslWithFullText = 0;

@@ -2,7 +2,12 @@ package uppick.dsadvancement;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,33 +35,61 @@ public class ProductServicePerformanceTest {
 
 	@Test
 	void compareAveragePerformance() {
-		int iterations = 10;
 
-		long jpaWithFullText = 0;
-		long dslWithFullText = 0;
+		int virtualThreads = 10;
+		int iterationsPerThread = 10;
 
-		long jpaWithLike = 0;
-		long dslWithLike = 0;
+		try (ExecutorService executor = Executors.newVirtualThreadPerTaskExecutor()) {
 
-		long elasticWithQuery = 0;
+			List<Callable<long[]>> tasks = new ArrayList<>();
 
-		for (int i = 0; i < iterations; i++) {
-			jpaWithFullText += measure(() -> productService.findProductsWithJpaByFullText(KEYWORD));
-			dslWithFullText += measure(() -> productService.findProductsWithDslByFullText(KEYWORD));
+			for (int t = 0; t < virtualThreads; t++) {
+				tasks.add(() -> {
+					long jpaWithFullText = 0;
+					long dslWithFullText = 0;
+					long jpaWithLike = 0;
+					long dslWithLike = 0;
+					long elasticWithQuery = 0;
 
-			jpaWithLike += measure(() -> productService.findProductsWithJpaByLike(KEYWORD));
-			dslWithLike += measure(() -> productService.findProductsWithDslByLike(KEYWORD));
+					for (int i = 0; i < iterationsPerThread; i++) {
+						jpaWithFullText += measure(() -> productService.findProductsWithJpaByFullText(KEYWORD));
+						dslWithFullText += measure(() -> productService.findProductsWithDslByFullText(KEYWORD));
+						jpaWithLike += measure(() -> productService.findProductsWithJpaByLike(KEYWORD));
+						dslWithLike += measure(() -> productService.findProductsWithDslByLike(KEYWORD));
+						elasticWithQuery += measure(() -> productSearchService.findProductsWithElasticsearch(KEYWORD));
+					}
 
-			elasticWithQuery += measure(() -> productSearchService.findProductsWithElasticsearch(KEYWORD));
+					return new long[]{jpaWithFullText, dslWithFullText, jpaWithLike, dslWithLike, elasticWithQuery};
+				});
+			}
+
+			// Virtual Thread로 병렬 실행
+			List<Future<long[]>> results = executor.invokeAll(tasks);
+
+			long jpaWithFullText = 0, dslWithFullText = 0, jpaWithLike = 0, dslWithLike = 0, elasticWithQuery = 0;
+
+			for (Future<long[]> f : results) {
+				long[] arr = f.get();
+				jpaWithFullText += arr[0];
+				dslWithFullText += arr[1];
+				jpaWithLike += arr[2];
+				dslWithLike += arr[3];
+				elasticWithQuery += arr[4];
+			}
+
+			int totalIterations = virtualThreads * iterationsPerThread;
+
+			log.info("[JPA With FullText Average] : {} ms", jpaWithFullText / totalIterations);
+			log.info("[DSL With FullText Average] : {} ms", dslWithFullText / totalIterations);
+			log.info("[JPA With LIKE Average] : {} ms", jpaWithLike / totalIterations);
+			log.info("[DSL With LIKE Average] : {} ms", dslWithLike / totalIterations);
+			log.info("[Elastic With Query Average] : {} ms", elasticWithQuery / totalIterations);
+
+			log.info("Performance test completed.");
+
+		} catch (Exception e) {
+			throw new RuntimeException(e);
 		}
-
-		log.info("[JPA With Index Average] : {} ms", jpaWithFullText / iterations);
-		log.info("[DSL With Index Average] : {} ms", dslWithFullText / iterations);
-
-		log.info("[JPA With No Index Average] : {} ms", jpaWithLike / iterations);
-		log.info("[DSL With No Index Average] : {} ms", dslWithLike / iterations);
-
-		log.info("[Elastic With Query] : {} ms", elasticWithQuery / iterations);
 
 		List<Product> p1 = productService.findProductsWithJpaByFullText(KEYWORD);
 		List<ProductSearchDto> p2 = productService.findProductsWithDslByFullText(KEYWORD);

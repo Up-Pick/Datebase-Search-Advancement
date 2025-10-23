@@ -1,0 +1,15 @@
+{
+  "properties": {
+    "id": {
+      "type": "long"
+    },
+    "productName": {
+      "type": "text",
+      "analyzer": "standard"
+    },
+    "content": {
+      "type": "text",
+      "analyzer": "standard"
+    }
+  }
+}

@@ -1,14 +1,14 @@
-package uppick.dsadvancement.fullTextSearch.service;
+package uppick.dsadvancement.dsa.service;
 
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
-import uppick.dsadvancement.fullTextSearch.Dto.response.ProductSearchDto;
-import uppick.dsadvancement.fullTextSearch.entity.Product;
-import uppick.dsadvancement.fullTextSearch.repository.ProductQueryRepository;
-import uppick.dsadvancement.fullTextSearch.repository.ProductRepository;
+import uppick.dsadvancement.dsa.Dto.response.ProductSearchDto;
+import uppick.dsadvancement.dsa.entity.Product;
+import uppick.dsadvancement.dsa.repository.ProductQueryRepository;
+import uppick.dsadvancement.dsa.repository.ProductRepository;
 
 @Service
 @RequiredArgsConstructor

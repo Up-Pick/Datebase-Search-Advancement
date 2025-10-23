@@ -10,9 +10,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import lombok.extern.slf4j.Slf4j;
-import uppick.dsadvancement.fullTextSearch.Dto.response.ProductSearchDto;
-import uppick.dsadvancement.fullTextSearch.entity.Product;
-import uppick.dsadvancement.fullTextSearch.service.ProductService;
+import uppick.dsadvancement.dsa.Dto.response.ProductSearchDto;
+import uppick.dsadvancement.dsa.entity.Product;
+import uppick.dsadvancement.dsa.service.ProductService;
 
 @Slf4j
 @SpringBootTest

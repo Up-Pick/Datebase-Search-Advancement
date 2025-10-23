@@ -1,4 +1,4 @@
-package uppick.dsadvancement.fullTextSearch.repository;
+package uppick.dsadvancement.dsa.repository;
 
 import java.util.List;
 
@@ -11,9 +11,9 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.querydsl.sql.SQLQueryFactory;
 
 import lombok.RequiredArgsConstructor;
-import uppick.dsadvancement.fullTextSearch.Dto.response.ProductSearchDto;
+import uppick.dsadvancement.dsa.Dto.response.ProductSearchDto;
 
-import static uppick.dsadvancement.fullTextSearch.entity.QProduct.product;
+import static uppick.dsadvancement.dsa.entity.QProduct.product;
 
 @Repository
 @RequiredArgsConstructor

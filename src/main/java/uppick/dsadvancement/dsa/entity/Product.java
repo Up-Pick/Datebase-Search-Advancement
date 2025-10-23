@@ -1,4 +1,4 @@
-package uppick.dsadvancement.fullTextSearch.entity;
+package uppick.dsadvancement.dsa.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

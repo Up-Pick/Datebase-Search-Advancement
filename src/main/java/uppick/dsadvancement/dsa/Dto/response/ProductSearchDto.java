@@ -1,4 +1,4 @@
-package uppick.dsadvancement.fullTextSearch.Dto.response;
+package uppick.dsadvancement.dsa.Dto.response;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;

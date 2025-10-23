@@ -1,4 +1,4 @@
-package uppick.dsadvancement.fullTextSearch.config;
+package uppick.dsadvancement.dsa.config;
 
 import java.util.Random;
 import java.util.stream.IntStream;
@@ -11,8 +11,8 @@ import org.springframework.stereotype.Component;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import uppick.dsadvancement.fullTextSearch.entity.Product;
-import uppick.dsadvancement.fullTextSearch.repository.ProductRepository;
+import uppick.dsadvancement.dsa.entity.Product;
+import uppick.dsadvancement.dsa.repository.ProductRepository;
 
 @Slf4j
 @Component

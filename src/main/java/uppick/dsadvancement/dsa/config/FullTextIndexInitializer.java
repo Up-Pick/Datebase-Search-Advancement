@@ -1,4 +1,4 @@
-package uppick.dsadvancement.fullTextSearch.config;
+package uppick.dsadvancement.dsa.config;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;

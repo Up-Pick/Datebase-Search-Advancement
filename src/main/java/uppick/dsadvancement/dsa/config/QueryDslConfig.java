@@ -1,4 +1,4 @@
-package uppick.dsadvancement.fullTextSearch.config;
+package uppick.dsadvancement.dsa.config;
 
 import javax.sql.DataSource;
 

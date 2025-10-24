@@ -4,6 +4,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 
 @Configuration
-@EnableElasticsearchRepositories(basePackages = "uppick.dsadvancement.search.repository")
+@EnableElasticsearchRepositories
 public class ElasticsearchConfig {
 }

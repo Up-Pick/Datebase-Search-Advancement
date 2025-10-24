@@ -108,4 +108,9 @@ public class ProductServicePerformanceTest {
 		runnable.run();
 		return Duration.between(start, Instant.now()).toMillis();
 	}
+
+	@Test
+	void async() {
+		productService.syncAllProductsToElasticsearch();
+	}
 }

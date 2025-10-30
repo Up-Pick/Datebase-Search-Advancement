@@ -1,51 +1,40 @@
 services:
-  elasticsearch:
+  ds-elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:8.15.3
-    container_name: elasticsearch
+    container_name: ds-elasticsearch
     environment:
       - node.name=es01
       - discovery.type=single-node
       - bootstrap.memory_lock=true
       - "ES_JAVA_OPTS=-Xms2g -Xmx2g"
-      - xpack.security.enabled=true
+      - xpack.security.enabled=false
       - ELASTIC_PASSWORD=password
     ulimits:
       memlock:
         soft: -1
         hard: -1
     volumes:
-      - esdata:/usr/share/elasticsearch/data
+      - ds_es_data:/usr/share/elasticsearch/data
     ports:
-      - 9200:9200
-      - 9300:9300
-    networks:
-      - elk
+      - 9202:9200
     command: >
       sh -c "
         bin/elasticsearch-plugin install analysis-nori --batch &&
         bin/elasticsearch
       "
 
-  kibana:
+  ds-kibana:
     image: docker.elastic.co/kibana/kibana:8.15.3
-    container_name: kibana
+    container_name: ds-kibana
+    depends_on:
+      - ds-elasticsearch
     environment:
-      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
-      - ELASTICSEARCH_USERNAME=kibana_system
-      - ELASTICSEARCH_PASSWORD=IfCLzAjxYJ2M2Ln4yMEg
+      - ELASTICSEARCH_HOSTS=http://ds-elasticsearch:9200
     ports:
-      - 5601:5601
+      - 5603:5601
     volumes:
-      - kibana-data:/usr/share/kibana/data
-    networks:
-      - elk
+      - ds_kibana_data:/usr/share/kibana/data
 
 volumes:
-  esdata:
-    driver: local
-  kibana-data:
-    driver: local
-
-networks:
-  elk:
-    driver: bridge
+  ds_es_data:
+  ds_kibana_data:

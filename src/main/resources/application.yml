@@ -4,6 +4,8 @@ spring:
     username: ${DB_USER}
     password: ${DB_PASS}
     driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 100
   jpa:
     open-in-view: false
     properties:
@@ -13,5 +15,11 @@ spring:
       ddl-auto: none
   elasticsearch:
     username: elastic
-    password: G0MfzjGI2Glf*61628Yz
-    uris: http://localhost:9200
+    password: z0tX16xvXEI4R8R=cWj8
+    uris: http://localhost:9202
+  sql:
+    init:
+      mode: always
+      schema-locations:
+        - classpath:static/sql/auction_schema.sql
+        - classpath:static/sql/product_schema.sql

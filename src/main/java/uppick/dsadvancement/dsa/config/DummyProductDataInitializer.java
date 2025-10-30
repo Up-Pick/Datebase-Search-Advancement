@@ -23,7 +23,7 @@ import uppick.dsadvancement.search.repository.ProductDocumentRepository;
 @Component
 @RequiredArgsConstructor
 @DependsOn({"fullTextIndexInitializer"})
-public class DummyDataInitializer {
+public class DummyProductDataInitializer {
 
 	private final ProductRepository productRepository;
 	private final ProductDocumentRepository productDocumentRepository;

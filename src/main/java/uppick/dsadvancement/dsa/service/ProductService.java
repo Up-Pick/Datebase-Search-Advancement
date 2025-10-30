@@ -1,14 +1,18 @@
 package uppick.dsadvancement.dsa.service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.RequiredArgsConstructor;
 import uppick.dsadvancement.dsa.Dto.response.ProductSearchDto;
 import uppick.dsadvancement.dsa.entity.Product;
 import uppick.dsadvancement.dsa.repository.ProductQueryRepository;
 import uppick.dsadvancement.dsa.repository.ProductRepository;
+import uppick.dsadvancement.search.document.ProductDocument;
+import uppick.dsadvancement.search.repository.ProductDocumentRepository;
 
 @Service
 @RequiredArgsConstructor
